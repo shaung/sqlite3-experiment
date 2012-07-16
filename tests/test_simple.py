@@ -51,14 +51,24 @@ class TestBookStore:
     def test_internal_eq_try(self):
         result = self.db.select("""
         select t.id from jsondata t
-        where t.id in (4,9,14,20) and exists (
-            select * from (
-                select id, type, value from jsondata
-                where parent = (select id from jsondata where type = 8 and parent = t.id and value = 'author')
-                union all
-                select -9, -1, ''
-            ) __t0__
-            where __t0__.type > 0 and __t0__.value = 'Evelyn Waugh' and __t0__.type > 0)""")
+         where t.id in (4,9,14,20)
+           and exists (
+                select * from (
+                    select id, type, value
+                    from jsondata
+                    where parent = (select id
+                                    from jsondata
+                                    where type = 8
+                                    and parent = t.id
+                                    and value = 'author')
+                    union all
+                    select -9 as id, -1 as type, 'x' as value
+                ) t0
+                where t0.type > 0
+                  and t0.value = 'Evelyn Waugh'
+                  and t0.type > 0
+               )
+        """)
         eq_([row['id'] for row in result], [9])
 
 
@@ -80,6 +90,9 @@ class TestBookStore:
         """)
         eq_([row['value'] for row in result], ['Evelyn Waugh'])
 
+    def test_internal_like(self):
+        result = self.db.select("select t.id from jsondata t where t.id in (4,9,14,20) and exists (select * from (select id, type, value from jsondata where parent = (select id from jsondata where type = 8 and parent = t.id and value = 'author') union all select -9, -1, NULL) __t0__ where (__t0__.type > 0 and __t0__.value like 'Evelyn Waugh') and (__t0__.type > 0))")
+        eq_([row['id'] for row in result], [9])
 
 
 if __name__ == '__main__':
