@@ -47,7 +47,7 @@ class Foo:
         conn.commit()
         self.conn = conn
 
-    def get_connection(self, force=False):
+    def get_connection(self, force=True):
         if force or not self.conn:
             try:
                 self.conn.close()

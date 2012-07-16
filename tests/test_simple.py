@@ -20,7 +20,8 @@ class TestBookStore:
     all_prices = [8.95, 12.99, 8.99, 22.99, 19.95]
 
     def setup(self):
-        self.dbpath = 'bookstore.db'
+        self.dbpath = os.path.join(os.path.dirname(__file__), 'bookstore.db')
+        logger.debug('dbpath = %s' % self.dbpath)
         """
         if os.path.exists(self.dbpath):
             os.remove(self.dbpath)
