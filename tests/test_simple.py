@@ -22,14 +22,6 @@ class TestBookStore:
     def setup(self):
         self.dbpath = os.path.join(os.path.dirname(__file__), 'bookstore.db')
         logger.debug('dbpath = %s' % self.dbpath)
-        """
-        if os.path.exists(self.dbpath):
-            os.remove(self.dbpath)
-
-        fpath = os.path.join(os.path.dirname(__file__), 'bookstore.json')
-        db = JsonDB.from_file(self.dbpath, fpath)
-        db.close()
-        """
 
         self.db = Foo(self.dbpath)
 
@@ -53,19 +45,19 @@ class TestBookStore:
         select t.id from jsondata t
          where t.id in (4,9,14,20)
            and exists (
-                select * from (
+                select t0.id from (
                     select id, type, value
                     from jsondata
                     where parent = (select id
-                                    from jsondata
-                                    where type = 8
-                                    and parent = t.id
-                                    and value = 'author')
+                                      from jsondata
+                                     where type = 8
+                                       and parent = t.id
+                                       and value = 'author')
                     union all
                     select -9 as id, -1 as type, 'x' as value
                 ) t0
                 where t0.type > 0
-                  and t0.value = 'Evelyn Waugh'
+                  and 'Evelyn Waugh' = t0.value
                   and t0.type > 0
                )
         """)
