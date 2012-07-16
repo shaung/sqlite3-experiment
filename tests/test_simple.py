@@ -57,7 +57,7 @@ class TestBookStore:
                     select -9 as id, -1 as type, 'x' as value
                 ) t0
                 where t0.type > 0
-                  and 'Evelyn Waugh' = t0.value
+                  and 'Evelyn Waugh' = t0.value COLLATE BINARY
                   and t0.type > 0
                )
         """)
