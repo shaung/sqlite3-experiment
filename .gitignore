@@ -1,0 +1,10 @@
+*.py[co]
+*.so
+*.log
+logs
+*.swp
+build
+*.db
+tests/*.db
+local
+MANIFEST
