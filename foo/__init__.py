@@ -56,7 +56,7 @@ class Foo:
 
             self.conn = sqlite3.connect(self.dbpath)
             self.conn.row_factory = sqlite3.Row
-            self.conn.text_factory = str
+            self.conn.text_factory = unicode
             self.conn.execute('PRAGMA encoding = "UTF-8";')
             self.conn.execute('PRAGMA foreign_keys = ON;')
             self.conn.execute('PRAGMA synchronous = OFF;')
