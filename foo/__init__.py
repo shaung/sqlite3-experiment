@@ -38,7 +38,7 @@ class Foo:
         (id     integer primary key,
          parent integer,
          type   integer,
-         value  blob,
+         value  text,
          link   text
         )""")
 
