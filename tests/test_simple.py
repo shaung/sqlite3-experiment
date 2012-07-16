@@ -72,6 +72,29 @@ class TestBookStore:
         eq_([row['id'] for row in result], [9])
 
 
+    def test_internal_without_eq_try(self):
+        result = self.db.select("""
+        select t.id from jsondata t
+         where t.id in (4,9,14,20)
+           and exists (
+                select * from (
+                    select id, type, value
+                    from jsondata
+                    where parent = (select id
+                                    from jsondata
+                                    where type = 8
+                                    and parent = t.id
+                                    and value = 'author')
+                    union all
+                    select -9 as id, -1 as type, 'x' as value
+                ) t0
+                where t0.type > 0
+                  and t0.type > 0
+               )
+        """)
+        eq_([row['id'] for row in result], [4,9,14,20])
+
+
     def test_travis_eq_pass(self):
         result = self.db.select("""
         select id, type, value from (
