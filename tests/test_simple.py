@@ -56,7 +56,15 @@ class TestBookStore:
         ) __t0__
         where (__t0__.type > 0 and __t0__.value = 'Evelyn Waugh')
         and (__t0__.type > 0)""")
+        eq_([row['id'] for row in result], [37])
         eq_([row['value'] for row in result], ['Evelyn Waugh'])
+
+    def test_travis_eq3(self):
+        result = self.db.select("""
+        select id, type, value from jsondata t where t.value = 'Evelyn Waugh'
+        """)
+        eq_([row['value'] for row in result], ['Evelyn Waugh'])
+
 
 
 if __name__ == '__main__':
